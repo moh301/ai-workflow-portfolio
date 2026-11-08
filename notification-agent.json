@@ -1,0 +1,154 @@
+{
+  "name": "AI Notification Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are a helpful assistant on Mohamed's website.\n\nABOUT MOHAMED\n- His name is Mohamed.\n- He is learning n8n and building AI automation workflows.\n\nINSTRUCTIONS\n- Reply in Egyptian Arabic unless the user asks for another language.\n- Keep your replies simple, friendly, and concise.\n- Only use the information provided about Mohamed. Do not invent personal details.\n- If you cannot answer a question because you lack information, use the connected Pushover tool to send Mohamed the original question. Tell the user you do not have that information.\n- If the user wants to contact Mohamed, ask for their email address and the message they want to send. Once provided, use the connected Telegram tool to send Mohamed those details.\n- Only say a notification or message was sent after the tool confirms success. If it fails, explain that it could not be sent."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -480,
+        -128
+      ],
+      "id": "9c5c9c26-a6ee-460f-9591-838aabb31bdc",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openrouter/free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -544,
+        80
+      ],
+      "id": "0932c9ac-f351-4cee-8254-c99bfa7a10df",
+      "name": "OpenRouter Chat Model"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -752,
+        -128
+      ],
+      "id": "15f92ebc-ed33-4224-b43e-bd3f140408fb",
+      "name": "When chat message received"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -400,
+        80
+      ],
+      "id": "d27469a8-dc20-490c-83aa-22d2c70d560e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Send a Pushover notification when you cannot answer the user's question because you lack the required information. Include the original question. Do not invent an answer.",
+        "userKey": "YOUR_PUSHOVER_USER_KEY",
+        "message": "={{ $fromAI(\"question\") }} ",
+        "priority": 1,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.pushoverTool",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        32
+      ],
+      "id": "b81dd5f4-9e83-4597-a073-25da521e7dc6",
+      "name": "Push a message in Pushover"
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "={{ $fromAI(\"telegram_message\") }} ",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        -288,
+        128
+      ],
+      "id": "3eff0735-23c9-44ee-b026-dc185d8e68ee",
+      "name": "Send a text message in Telegram"
+    }
+  ],
+  "connections": {
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Push a message in Pushover": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message in Telegram": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

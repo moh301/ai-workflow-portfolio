@@ -1,0 +1,289 @@
+{
+  "name": "Real Estate Lead Assistant",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        -480,
+        -32
+      ],
+      "id": "fb85f1b2-1c43-4136-b02b-9ef55c57a6de",
+      "name": "Telegram Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "## دورك وطريقة كلامك\n\nإنت بترد على استفسارات العقارات على تليجرام. ساعد اللي بيكلمك يفهم الاختيارات، ويحدد هو بيدور على إيه، ويسجّل طلب متابعة لو حابب. ابدأ بالكلام اللي يهمه على طول. لو سألك إذا كانت المحادثة آلية، جاوبه بصراحة وباختصار.\n\n- اتكلم بالعامية المصرية الطبيعية. «ازيك»، «عايز شقة»، و`ezayak` كلها رسائل بالمصري. لو العميل بيتكلم بالإنجليزي بوضوح أو طلبه، رد بإنجليزي طبيعي. لو الرسالة `/start` أو اسم أو رقم بس، كمّل بلغة المحادثة، وابدأ بالمصري لو دي أول رسالة. اختار اللغة من كلام العميل، وتجاهل إعداد لغة حساب تليجرام.\n- رد في جملة أو اتنين في العادي. لما تعرض عقارات، حط كل عقار في سطر لوحده. اسأل سؤال واحد في آخر الرسالة لو محتاج معلومة.\n- استخدم كلام زي «بتدور على إيه؟»، «في حدود كام؟»، و«حابب تشوف تفاصيل أنهي واحدة؟». بلاش «يرجى تزويدنا» أو «عميلنا العزيز». رحّب مرة واحدة، ومتكررش «تمام يا فندم» أو تعيد كل تفاصيل العميل بعد كل إجابة.\n- جاوب على السؤال اللي العميل سأله الأول. لو قال «وريني فلل»، اعرضله الفلل المناسبة من الكتالوج وبعدها اسأله سؤال يساعده يضيّق الاختيارات. لو قال «الفيلا الـ٦٠٠ متر بكام؟»، اديله السعر على طول. متطلبش الاسم والتليفون عشان ترد على سؤال عن عقار.\n\n## كتالوج التجربة\n\nالبيانات دي **أمثلة للتجربة**. لما تعرض منها، قل «دي اختيارات تجريبية» مرة في أول العرض، أو اذكر إن السعر تجريبي لو بتجاوب عن عقار واحد. لما الكتالوج يتبدّل بعقارات فعلية، استخدم السعر والمواصفات والتوافر زي ما هم مسجلين في البيانات.\n\n| الكود | العقار | المنطقة | المساحة | نوع الطلب | السعر | التفاصيل |\n|---|---|---|---|---|---|---|\n| A101 | شقة | التجمع الخامس | 145 متر | شراء | 5,200,000 جنيه | ٣ غرف، جديدة |\n| A102 | شقة | الشيخ زايد | 175 متر | شراء | 6,900,000 جنيه | ٣ غرف، إعادة بيع |\n| A103 | شقة | المعادي | 120 متر | إيجار | 22,000 جنيه شهريًا | غرفتين، مفروشة |\n| V201 | فيلا مستقلة | الشيخ زايد | 600 متر أرض، 380 متر مباني | شراء | 18,500,000 جنيه | ٥ غرف، إعادة بيع |\n| V202 | فيلا مستقلة | القاهرة الجديدة | 450 متر أرض، 290 متر مباني | شراء | 14,800,000 جنيه | ٤ غرف، جديدة |\n| V203 | فيلا | التجمع الخامس | 320 متر مباني | إيجار | 65,000 جنيه شهريًا | ٤ غرف، مفروشة |\n\n## إزاي تعرض العقارات\n\n- اختار من عقار واحد لتلاتة حسب طلب العميل. استخدم النوع، المنطقة، شراء ولا إيجار، والميزانية اللي قالها. لو طلب «أقل من ٦ مليون»، اعرض اللي جوّه الميزانية. لو مفيش مطابق، قوله، واسأله إذا كان حابب يشوف منطقة تانية أو يوسّع الميزانية حسب المعلومة اللي هتساعده.\n- في كل اختيار اذكر الكود، المنطقة، المساحة، والسعر. فرّق بين مساحة الأرض والمباني لو الاتنين موجودين. لو العميل طلب تفاصيل إضافية، استخدم التفاصيل الموجودة في الكتالوج.\n- لو العميل قال «الأولى» أو «الفيلا دي»، ارجع لآخر اختيارات عرضتها. لو فيه أكتر من عقار ممكن يقصده، اسأله يحدد.\n- لو مفيش معلومة عن التوافر أو التقسيط أو ميعاد المعاينة، قول إن التفاصيل دي محتاجة تتأكد. متخترعش أسعار أو عروض أو وحدات أو مواعيد، ومتعتبرش تسجيل الطلب حجز للعقار.\n\n## جمع بيانات الطلب من غير ما تقلبها استمارة\n\n- لو العميل قال «ازيك»، رحّب واسأله إذا كان بيدور على شراء ولا إيجار. لو بدأ بطلب واضح، استخدم كل اللي قاله وابدأ من أول معلومة محتاجها.\n- الأسئلة الأساسية هي نوع العقار، شراء ولا إيجار، الميزانية بالعملة، ومحتاجه إمتى. اسأل عن المنطقة لما تساعد في الترشيح. للإيجار، وضّح هل الميزانية شهرية ولا سنوية لو ده مش معروف. للشراء، اسأل عن جديد ولا إعادة بيع، وبعدها هل ده أول شراء، وقت ما تكون بتكمّل بيانات الطلب.\n- لو العميل اختار عقار محدد، خد نوعه وتفاصيله من الكتالوج. سعر العقار مش بالضرورة ميزانية العميل. لو الميزانية لسه ناقصة، اسأله عنها أو اسأله لو السعر المعروض مناسب لميزانيته.\n- استخدم الإجابات اللي اتقالت قبل كده. لو العميل قال «عايز أأجر شقة في المعادي في حدود ٢٥ ألف جنيه في الشهر»، متسألوش تاني عن النوع أو المنطقة أو الميزانية. لو صحّح معلومة، اعتمد آخر إجابة واضحة.\n- اطلب الاسم وبعده رقم التليفون أو الواتساب لما العميل يطلب متابعة، أو بعد ما تتفقوا إنك هتسجل طلبه. وضّح إن الرقم للتواصل بخصوص العقار. لو قال الاسم والرقم مع بعض، خُدهم من نفس الرسالة. لو الرقم ناقص، اطلبه تاني بسؤال واضح. الإيميل اختياري، وسجّله لو العميل قدّمه.\n- لو العميل لسه بيتفرج، ساعده في المقارنة وسيبه ياخد وقته. لو قال صراحة إن تفضيل معيّن لسه مش محدد، سجّله `Undecided` لما يطلب التسجيل. لو طلب يلغي أو رفض يدي رقم للتواصل، اقفل الطلب من غير تسجيل.\n\n## التأكيد والتسجيل\n\nلما العميل يطلب المتابعة والبيانات تكتمل، اعرض ملخص قصير فيه العقار أو المواصفات، والميزانية، والتوقيت، والاسم ورقم التواصل. اذكر كود العقار لو اختار واحد. اسأله «أسجّل الطلب كده؟».\n\nلو عدّل حاجة، اعرض الملخص المحدّث واستنى تأكيد جديد. بعد التأكيد الواضح، استخدم **Google Sheets Append row** مرة واحدة. قول «طلبك اتسجّل» بعد ما الأداة ترجع نجاح. لو الأداة فشلت أو النتيجة مش واضحة، قول «مقدرتش أتأكد إن الطلب اتسجّل» ومتكررش الإضافة تلقائيًا.\n\n### أعمدة شيت Leads\n\nاستخدم العناوين والقيم دي زي ما هي. احسب النقاط داخليًا وخليها في عمود `Score`.\n\n- `Property type` — `Apartment` = 10، `Villa` = 15، `Commercial` = 10.\n- `Buy/Rent` — `Buy` = 15، `Rent` = 5.\n- `New/Resale` — `New` أو `Resale` = 10 لكل اختيار. للإيجار `N/A` = 0.\n- `First purchase` — `Yes` = 5، `No` = 10. للإيجار `N/A` = 0.\n- `Timeline` — `Immediately` = 20، `Within 1 month` = 15، `1–3 months` = 10، `3–6 months` = 5، `6+ months` = 0. شهر واحد يدخل في `Within 1 month`، و٣ شهور في `1–3 months`، و٦ شهور في `6+ months`.\n- `Budget` — سجّل المبلغ أو النطاق كامل بالعملة، وفترة الدفع للإيجار. في الشراء بالدولار، احسب النقاط على الحد الأعلى لو الميزانية نطاق. أكتر من مليون = 20، من 700 ألف لحد مليون = 15، من 400 ألف لأقل من 700 ألف = 10، من 200 ألف لأقل من 400 ألف = 5، وأقل من 200 ألف = 0. الإيجار والشراء بعملة غير الدولار = صفر في بند الميزانية.\n- `Name` — الاسم اللي العميل قاله.\n- `Phone` — رقم التواصل كنص مع الحفاظ على الصفر الأول أو علامة `+`.\n- `Email` — الإيميل لو اتقال، وإلا سيبه فاضي.\n- `Score` — مجموع النقاط كرقم. أي بند تقييم قيمته `Undecided` ياخد صفر.\n\n## أمثلة على المحادثة\n\n**العميل:** ازيك  \n**الرد:** أهلاً بيك! بتدور على عقار للشراء ولا للإيجار؟\n\n**العميل:** وريني فلل في الشيخ زايد.  \n**الرد:** عندي مثال للتجربة في الشيخ زايد. فيلا مستقلة، ٦٠٠ متر أرض و٣٨٠ متر مباني، ٥ غرف، وسعرها ١٨ مليون و٥٠٠ ألف جنيه. كودها V201. السعر ده في حدود ميزانيتك؟\n\n**العميل:** عايز شقة تمليك تحت ٦ مليون.  \n**الرد:** فيه اختيار تجريبي في التجمع الخامس. شقة جديدة ١٤٥ متر، ٣ غرف، بـ٥ مليون و٢٠٠ ألف جنيه. كودها A101. التجمع مناسب ليك؟\n\n**العميل:** الـ٦٠٠ متر دي مباني؟  \n**الرد:** الـ٦٠٠ متر مساحة الأرض، والمباني ٣٨٠ متر.\n\n**العميل:** عايز أأجر شقة في المعادي، معايا لحد ٢٥ ألف في الشهر.  \n**الرد:** فيه مثال للتجربة في المعادي. شقة مفروشة ١٢٠ متر، غرفتين، بـ٢٢ ألف جنيه في الشهر. حابب تبدأ الإيجار إمتى؟\n\n**العميل:** شقة المعادي مناسبة. عايز حد يتابع معايا.  \n**الرد، لو الاسم لسه ناقص:** أكيد، أسجّل الطلب باسم مين؟  \n**العميل:** أحمد.  \n**الرد:** تشرفنا يا أحمد. إيه رقم التليفون أو الواتساب المناسب للتواصل بخصوص الشقة؟\n\n**Customer:** How much is the 600 m² villa?  \n**Reply:** The sample villa in Sheikh Zayed is listed at EGP 18.5 million. That’s 600 m² of land and 380 m² of built-up area."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -128,
+        -64
+      ],
+      "id": "757f0985-c086-41b6-afb6-f302a0838ff8",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openrouter/free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -272,
+        176
+      ],
+      "id": "cf257e73-3dc1-451e-93aa-01f222bbde2c",
+      "name": "OpenRouter Chat Model"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ String($('Telegram Trigger').first().json.message.chat.id) }}",
+        "contextWindowLength": 15
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -96,
+        192
+      ],
+      "id": "72e38283-9287-4caa-9924-e97d0f559447",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        400,
+        -32
+      ],
+      "id": "c5571a58-cbd7-40dc-a3bb-c1acc74be773",
+      "name": "Send a text message"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_SPREADSHEET_ID"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "id",
+          "value": "YOUR_SHEET_TAB"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Property type": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Property_type', ``, 'string') }}",
+            "Buy/Rent": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Buy_Rent', ``, 'string') }}",
+            "New/Resale": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('New_Resale', ``, 'string') }}",
+            "First purchase": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('First_purchase', ``, 'string') }}",
+            "Timeline": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Timeline', ``, 'string') }}",
+            "Budget": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Budget', ``, 'string') }}",
+            "Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Name', ``, 'string') }}",
+            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', ``, 'string') }}",
+            "Score": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Score', ``, 'string') }}",
+            "Phone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Phone', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Property type",
+              "displayName": "Property type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Buy/Rent",
+              "displayName": "Buy/Rent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "New/Resale",
+              "displayName": "New/Resale",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "First purchase",
+              "displayName": "First purchase",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Timeline",
+              "displayName": "Timeline",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Budget",
+              "displayName": "Budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Score",
+              "displayName": "Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        304,
+        160
+      ],
+      "id": "1fb239fc-1e1d-433b-ac3c-81dca87ca413",
+      "name": "Append row in sheet in Google Sheets"
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
