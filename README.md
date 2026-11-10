@@ -1,4 +1,4 @@
-# AI & Automation with n8n
+# AI Workflow Portfolio
 
 Five workflows that connect chat, forms, data stores, and AI models for practical tasks. Each project includes the importable workflow and a short setup and verification guide.
 
